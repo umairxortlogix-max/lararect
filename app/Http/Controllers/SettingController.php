@@ -14,7 +14,7 @@ class SettingController extends Controller
     {
         $settings = Setting::where('User_id', auth()->id())->get();
 
-        return inertia('settings', ['settings' => $settings]);
+        return inertia('settings', ['settings' => $settings, 'isSuperAdmin' => auth()->user()->hasRole('super_admin')]);
     }
 
     /**
@@ -30,12 +30,21 @@ class SettingController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'settings.dashboard_image' => ['nullable', 'image', 'max:5120'],
+        ]);
+
         return $this->save($request);
     }
 
     public function save(Request $request)
     {
         $settings = $request->input('settings', []);
+
+        if ($request->hasFile('settings.dashboard_image')) {
+            $settings['dashboard_image'] = $request->file('settings.dashboard_image')
+                ->store('settings', 'public');
+        }
 
         foreach ($settings as $key => $value) {
 

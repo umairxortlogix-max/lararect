@@ -39,7 +39,7 @@ type Props = {
     breadcrumbs?: BreadcrumbItem[];
 };
 
-const mainNavItems: NavItem[] = [
+const mainNavItems: Array<NavItem & { permission?: string }> = [
     {
         title: 'Dashboard',
         href: dashboard(),
@@ -65,7 +65,22 @@ const activeItemStyles =
 
 export function AppHeader({ breadcrumbs = [] }: Props) {
     const page = usePage();
-    const { auth } = page.props;
+    const auth = (page.props as any).auth ?? { permissions: [], isSuperAdmin: false };
+    const visibleMainNavItems = mainNavItems.filter((item) => {
+
+        // Super Admin = Everything
+        if (auth.isSuperAdmin) {
+            return true;
+        }
+
+        // No permission required
+        if (!item.permission) {
+            return true;
+        }
+
+        // Check user's permission
+        return (auth.permissions ?? []).includes(item.permission);
+    });
     const getInitials = useInitials();
     const { isCurrentUrl, whenCurrentUrl } = useCurrentUrl();
 
@@ -98,7 +113,7 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                                 <div className="flex h-full flex-1 flex-col space-y-4 p-4">
                                     <div className="flex h-full flex-col justify-between text-sm">
                                         <div className="flex flex-col space-y-4">
-                                            {mainNavItems.map((item) => (
+                                            {visibleMainNavItems.map((item) => (
                                                 <Link
                                                     key={item.title}
                                                     href={item.href}

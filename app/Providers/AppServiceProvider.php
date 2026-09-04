@@ -5,8 +5,10 @@ namespace App\Providers;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Inertia\Inertia;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +26,30 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+
+        Gate::before(fn ($user) => $user->hasRole('super_admin') ? true : null);
+
+        Inertia::share([
+            'permissions' => fn () => auth()->user()?->getAllPermissions()
+                ->pluck('name')
+                ->values()
+                ->all() ?? [],
+            'roles' => fn () => auth()->user()?->getRoleNames()
+                ->values()
+                ->all() ?? [],
+            'isSuperAdmin' => fn () => auth()->user()?->hasRole('super_admin') ?? false,
+            'auth' => fn () => [
+                'user' => auth()->user(),
+                'permissions' => auth()->user()?->getAllPermissions()
+                    ->pluck('name')
+                    ->values()
+                    ->all() ?? [],
+                'roles' => auth()->user()?->getRoleNames()
+                    ->values()
+                    ->all() ?? [],
+                'isSuperAdmin' => auth()->user()?->hasRole('super_admin') ?? false,
+            ],
+        ]);
     }
 
     /**

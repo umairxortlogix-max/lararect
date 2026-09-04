@@ -11,6 +11,9 @@ declare module '@inertiajs/core' {
         sharedPageProps: {
             name: string;
             auth: Auth;
+            permissions: string[];
+            roles: string[];
+            isSuperAdmin: boolean;
             sidebarOpen: boolean;
             [key: string]: unknown;
         };

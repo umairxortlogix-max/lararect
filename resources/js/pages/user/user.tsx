@@ -5,16 +5,19 @@ import { useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import UserRoutes from '@/routes/users';
+import { useCan } from '@/hooks/use-can';
 
 interface User {
     id: number;
     name: string;
     email: string;
     location_id?: string;
+    roles: string[];
 }
 
 interface Props {
     users: User[];
+    roles: string[];
 }
 
 const emptyForm = {
@@ -23,9 +26,12 @@ const emptyForm = {
     password: '',
     password_confirmation: '',
     location_id: '',
+    role: '',
 };
 
-export default function UserPage({ users = [] }: Props) {
+export default function UserPage({ users = [], roles = [] }: Props) {
+    const can = useCan();
+    const canManageAccess = can('create users') || can('edit users');
     const [open, setOpen] = useState(false);
     const [editingUser, setEditingUser] = useState<User | null>(null);
     const { data, setData, post, put, processing, errors, reset } = useForm(emptyForm);
@@ -50,6 +56,7 @@ export default function UserPage({ users = [] }: Props) {
             password: '',
             password_confirmation: '',
             location_id: user.location_id ?? '',
+            role: user.roles[0] ?? '',
         });
         setOpen(true);
     };
@@ -84,9 +91,11 @@ export default function UserPage({ users = [] }: Props) {
                     <div>
                         <h1 className="text-2xl font-bold">Subaccount </h1>
                     </div>
-                    <div className="flex justify-end">
-                        <Button onClick={handleOpenCreate}>Create Subaccount</Button>
-                    </div>
+                    {can('create users') && (
+                        <div className="flex justify-end">
+                            <Button onClick={handleOpenCreate}>Create Subaccount</Button>
+                        </div>
+                    )}
 
                 </div>
 
@@ -99,6 +108,7 @@ export default function UserPage({ users = [] }: Props) {
                                     <th className="px-5 py-3 font-medium">Name</th>
                                     <th className="px-5 py-3 font-medium">Email</th>
                                     <th className="px-5 py-3 font-medium">Location</th>
+                                    <th className="px-5 py-3 font-medium">Role</th>
                                     <th className="px-5 py-3 font-medium">Actions</th>
                                 </tr>
                             </thead>
@@ -110,13 +120,18 @@ export default function UserPage({ users = [] }: Props) {
                                             <td className="px-5 py-4">{user.name}</td>
                                             <td className="px-5 py-4 text-muted-foreground">{user.email}</td>
                                             <td className="px-5 py-4">{user.location_id || 'N/A'}</td>
+                                            <td className="px-5 py-4">{user.roles.join(', ') || 'No role'}</td>
                                             <td className="px-5 py-4">
-                                                <Button variant="outline" size="sm" onClick={() => handleOpenEdit(user)}>
-                                                    Edit
-                                                </Button>
-                                                <Button variant="outline" size="sm" onClick={() => handleDelete(user)} className="ml-2">
-                                                    Delete
-                                                </Button>
+                                                {can('edit users') && (
+                                                    <Button variant="outline" size="sm" onClick={() => handleOpenEdit(user)}>
+                                                        Edit
+                                                    </Button>
+                                                )}
+                                                {can('delete users') && (
+                                                    <Button variant="outline" size="sm" onClick={() => handleDelete(user)} className="ml-2">
+                                                        Delete
+                                                    </Button>
+                                                )}
                                                 <Button variant="outline" size="sm" className="ml-2">
                                                     Login As
                                                 </Button>
@@ -125,7 +140,7 @@ export default function UserPage({ users = [] }: Props) {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan={5} className="px-5 py-10 text-center text-muted-foreground">
+                                        <td colSpan={6} className="px-5 py-10 text-center text-muted-foreground">
                                             No users found.
                                         </td>
                                     </tr>
@@ -225,6 +240,20 @@ export default function UserPage({ users = [] }: Props) {
                                 />
                                 <InputError message={errors.location_id} />
                             </div>
+
+                            {canManageAccess && <div className="grid gap-2">
+                                <label htmlFor="role" className="text-sm font-medium">Role</label>
+                                <select
+                                    id="role"
+                                    value={data.role}
+                                    onChange={(e) => setData('role', e.target.value)}
+                                    className="h-10 rounded-md border border-input bg-background px-3 text-sm shadow-sm"
+                                >
+                                    <option value="">No role</option>
+                                    {roles.map((role) => <option key={role} value={role}>{role}</option>)}
+                                </select>
+                                <InputError message={errors.role} />
+                            </div>}
 
                             <div className="flex justify-end gap-3 pt-2">
                                 <DialogClose asChild>

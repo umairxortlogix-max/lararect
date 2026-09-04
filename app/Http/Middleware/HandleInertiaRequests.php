@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -35,13 +36,31 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $user = $request->user();
+        $permissions = $user?->getAllPermissions()->pluck('name')->values()->all() ?? [];
+        $roles = $user?->getRoleNames()->values()->all() ?? [];
+        $dashboardImage = $request->user()
+            ? Setting::where('User_id', $request->user()->id)
+                ->where('key', 'dashboard_image')
+                ->value('value')
+            : null;
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
+            'dashboardImage' => $dashboardImage
+                ? asset('storage/' . $dashboardImage)
+                : null,
+            'permissions' => $permissions,
+            'roles' => $roles,
+            'isSuperAdmin' => in_array('super_admin', $roles, true),
             'auth' => [
-                'user' => $request->user(),
+                'user' => $user,
+                'permissions' => $permissions,
+                'roles' => $roles,
+                'isSuperAdmin' => in_array('super_admin', $roles, true),
             ],
-            'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'sidebarOpen' => !$request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }
 }

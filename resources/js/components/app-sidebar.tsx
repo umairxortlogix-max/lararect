@@ -21,35 +21,47 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+        permissions:'view dashboard',
+    
     },
     {
         title: 'Products',
         href: products(),
         icon: LayoutGrid,
+        permissions:'view products'
     },
     {
         title: 'Users',
         href: users(),
         icon: LayoutGrid,
+        permissions: 'view users'
+    },
+     {
+        title: 'Permissions',
+        href: '/permissions',
+        icon: LayoutGrid,
+        permissions: 'view permissions',
+        superAdminOnly: true,
     },
     {
         title: 'Settings',
         href: '/settings/info',
         icon: LayoutGrid,
+        permissions:'view settings'
     }
 ];
 
 const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: FolderGit2,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
-    },
+    // {
+    //     title: 'Repository',
+    //     href: 'https://github.com/laravel/react-starter-kit',
+    //     icon: FolderGit2,
+    // },
+    // {
+    //     title: 'Documentation',
+    //     href: 'https://laravel.com/docs/starter-kits#react',
+    //     icon: BookOpen,
+    // },
 ];
 
 export function AppSidebar() {
