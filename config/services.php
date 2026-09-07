@@ -33,6 +33,12 @@ return [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
+
+    ],
+    'ghl' => [
+        'client_id' => env('GHL_CLIENT_ID'),
+        'client_secret' => env('GHL_CLIENT_SECRET'),
+        'redirect_uri' => env('GHL_REDIRECT_URI'),
     ],
 
 ];

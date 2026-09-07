@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GHLController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SettingController;
@@ -79,7 +80,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('permissions/update', [PermissionController::class, 'update'])
         ->name('permissions.update');
+
+    Route::get('/ghl/connect', [GHLController::class, 'connect'])
+        ->middleware('permission:view settings')
+        ->name('ghl.connect');
+
+    Route::get('/test/callback', [GHLController::class, 'callback'])
+        ->middleware('permission:view settings')
+        ->name('ghl.callback');
+
+    Route::get('/ghl/sync-location', [GHLController::class, 'locations'])
+        ->middleware('permission:view settings')
+        ->name('ghl.sync-location');
+
 });
+
+// GHL CONNECTION
+
 
 /*
 |--------------------------------------------------------------------------

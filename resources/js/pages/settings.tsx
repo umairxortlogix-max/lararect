@@ -1,8 +1,7 @@
-
-import { Button } from '@/components/ui/button';
-import { Head, useForm } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
-import { useCan } from '@/hooks/use-can';
+import { Button } from "@/components/ui/button";
+import { Head, useForm } from "@inertiajs/react";
+import { useEffect, useState } from "react";
+import { useCan } from "@/hooks/use-can";
 
 interface Setting {
     key: string;
@@ -16,24 +15,33 @@ interface Props {
 
 export default function SettingsPage({ settings = [], isSuperAdmin }: Props) {
     const can = useCan();
-    const canViewSettings = can('view settings');
-    const canEditSettings = can('edit settings');
+    const canViewSettings = can("view settings");
+    const canEditSettings = can("edit settings");
+    const ghlConnectLabel = isSuperAdmin
+        ? "Connect with Agency"
+        : "Connect with Sub Account";
+    const ghlSyncLabel = isSuperAdmin
+        ? "Sync Locations"
+        : "Sync Locations Data";
+
     const getSettingValue = (key: string) => {
-        return settings.find((setting) => setting.key === key)?.value || '';
+        return settings.find((setting) => setting.key === key)?.value || "";
     };
 
-    const savedDashboardImage = getSettingValue('dashboard_image');
+    const savedDashboardImage = getSettingValue("dashboard_image");
     const savedDashboardImageUrl = savedDashboardImage
-        ? savedDashboardImage.startsWith('http')
+        ? savedDashboardImage.startsWith("http")
             ? savedDashboardImage
             : `/storage/${savedDashboardImage}`
         : null;
-    const [imagePreview, setImagePreview] = useState<string | null>(savedDashboardImageUrl);
+    const [imagePreview, setImagePreview] = useState<string | null>(
+        savedDashboardImageUrl,
+    );
 
     const { data, setData, post, processing, errors } = useForm({
         settings: {
-            client_id: getSettingValue('client_id'),
-            client_secret: getSettingValue('client_secret'),
+            client_id: getSettingValue("client_id"),
+            client_secret: getSettingValue("client_secret"),
             dashboard_image: null as File | null,
         },
     });
@@ -44,7 +52,7 @@ export default function SettingsPage({ settings = [], isSuperAdmin }: Props) {
 
     useEffect(() => {
         return () => {
-            if (imagePreview?.startsWith('blob:')) {
+            if (imagePreview?.startsWith("blob:")) {
                 URL.revokeObjectURL(imagePreview);
             }
         };
@@ -53,7 +61,7 @@ export default function SettingsPage({ settings = [], isSuperAdmin }: Props) {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        post('/settings/store', {
+        post("/settings/store", {
             preserveScroll: true,
             forceFormData: true,
         });
@@ -61,7 +69,7 @@ export default function SettingsPage({ settings = [], isSuperAdmin }: Props) {
     const handleSubmitimage = (e: React.FormEvent) => {
         e.preventDefault();
 
-        post('/settings/store', {
+        post("/settings/store", {
             preserveScroll: true,
             forceFormData: true,
         });
@@ -84,17 +92,57 @@ export default function SettingsPage({ settings = [], isSuperAdmin }: Props) {
                                     Configure your GoHighLevel API credentials.
                                 </p>
                             </div>
-
                             <div className="rounded-xl border border-gray-600 bg-gray-800 shadow-sm">
+                                <div className="border-b border-gray-600 px-6 py-5">
+                                    <div className="mb-4 rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+                                        <strong className="font-semibold">
+                                            Important:
+                                        </strong>{" "}
+                                        GHL integration works only with the
+                                        correct agency or sub-account setup. If
+                                        you are already logged in to GHL, log
+                                        out and log in again before connecting.
+                                        Use the exact redirect URL configured in
+                                        your GHL app, and for live testing use a
+                                        public domain, not localhost.
+                                    </div>
+                                    <h2 className="text-lg font-semibold text-gray-200">
+                                        Connection with GHL
+                                    </h2>
+                                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
+                                        <div>
+                                            <a
+                                                href="/ghl/connect"
+                                                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-3 font-medium text-white transition hover:bg-blue-700"
+                                            >
+                                                <span>🔗</span>
+                                                {ghlConnectLabel}
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <a
+                                                href="/ghl/sync-location"
+                                                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-3 font-medium text-white transition hover:bg-blue-700"
+                                            >
+                                                <span>🔄</span>
+                                                {ghlSyncLabel}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
+                            <div className="rounded-xl border border-gray-600 bg-gray-800 mt-6 shadow-sm">
                                 <div className="border-b border-gray-600 px-6 py-5">
                                     <h2 className="text-lg font-semibold text-gray-200">
                                         API Configuration
                                     </h2>
                                 </div>
 
-                                <form onSubmit={handleSubmit} className="space-y-6 p-6">
-
+                                <form
+                                    onSubmit={handleSubmit}
+                                    className="space-y-6 p-6"
+                                >
                                     {/* Client ID */}
                                     <div>
                                         <label
@@ -109,7 +157,7 @@ export default function SettingsPage({ settings = [], isSuperAdmin }: Props) {
                                             id="client_id"
                                             value={data.settings.client_id}
                                             onChange={(e) =>
-                                                setData('settings', {
+                                                setData("settings", {
                                                     ...data.settings,
                                                     client_id: e.target.value,
                                                 })
@@ -118,9 +166,9 @@ export default function SettingsPage({ settings = [], isSuperAdmin }: Props) {
                                             className="block w-full rounded-lg border border-gray-600 bg-gray-800 px-3 py-2.5 text-sm text-gray-300 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
                                         />
 
-                                        {errors['settings.client_id'] && (
+                                        {errors["settings.client_id"] && (
                                             <p className="mt-1.5 text-sm text-red-500">
-                                                {errors['settings.client_id']}
+                                                {errors["settings.client_id"]}
                                             </p>
                                         )}
                                     </div>
@@ -139,18 +187,23 @@ export default function SettingsPage({ settings = [], isSuperAdmin }: Props) {
                                             id="client_secret"
                                             value={data.settings.client_secret}
                                             onChange={(e) =>
-                                                setData('settings', {
+                                                setData("settings", {
                                                     ...data.settings,
-                                                    client_secret: e.target.value,
+                                                    client_secret:
+                                                        e.target.value,
                                                 })
                                             }
                                             placeholder="Enter client secret"
                                             className="block w-full rounded-lg border border-gray-600 bg-gray-800 px-3 py-2.5 text-sm text-gray-300 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
                                         />
 
-                                        {errors['settings.client_secret'] && (
+                                        {errors["settings.client_secret"] && (
                                             <p className="mt-1.5 text-sm text-red-500">
-                                                {errors['settings.client_secret']}
+                                                {
+                                                    errors[
+                                                        "settings.client_secret"
+                                                    ]
+                                                }
                                             </p>
                                         )}
                                     </div>
@@ -161,59 +214,77 @@ export default function SettingsPage({ settings = [], isSuperAdmin }: Props) {
                                             disabled={processing}
                                             className="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
                                         >
-                                            {processing ? 'Saving...' : 'Save Settings'}
+                                            {processing
+                                                ? "Saving..."
+                                                : "Save Settings"}
                                         </button>
                                     </div>
-
                                 </form>
                             </div>
                         </>
                     )}
 
-                    {canViewSettings && <div className="rounded-xl border border-gray-600 bg-gray-800 shadow-sm mt-6">
-                        <div className="border-b border-gray-600 px-6 py-5">
-                            <h2 className="text-lg font-semibold text-gray-200">
-                                Dashboard Image
-                            </h2>
-                            <form onSubmit={handleSubmitimage} className="space-y-6 p-6">
-                                <label
-                                    htmlFor="dashboard_image"
-                                    className="mb-2 block text-sm font-medium text-gray-200"
-                                >
+                    {canViewSettings && (
+                        <div className="rounded-xl border border-gray-600 bg-gray-800 shadow-sm mt-6">
+                            <div className="border-b border-gray-600 px-6 py-5">
+                                <h2 className="text-lg font-semibold text-gray-200">
                                     Dashboard Image
-                                </label>
+                                </h2>
+                                <form
+                                    onSubmit={handleSubmitimage}
+                                    className="space-y-6 p-6"
+                                >
+                                    <label
+                                        htmlFor="dashboard_image"
+                                        className="mb-2 block text-sm font-medium text-gray-200"
+                                    >
+                                        Dashboard Image
+                                    </label>
 
-                                {canEditSettings && <input
-                                    type="file"
-                                    id="dashboard_image"
-                                    onChange={(e) => {
-                                        const file = e.target.files?.[0];
-                                        if (file) {
-                                            setImagePreview(URL.createObjectURL(file));
-                                            setData('settings', {
-                                                ...data.settings,
-                                                dashboard_image: file,
-                                            });
-                                        }
-                                    }}
-                                    className="block w-full rounded-lg border border-gray-600 bg-gray-800 px-3 py-2.5 text-sm text-gray-300 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
-                                />}
-                                {imagePreview && (
-                                    <img
-                                        src={imagePreview}
-                                        alt="Dashboard preview"
-                                        className="mt-4 h-40 w-full rounded-lg border border-gray-600 object-contain bg-gray-900 p-2"
-                                    />
-                                )}
-                                {canEditSettings && (
-                                    <Button type="submit" disabled={processing} className="mt-4">
-                                        {processing ? 'Uploading...' : 'Upload Image'}
-                                    </Button>
-                                )}
-                            </form>
+                                    {canEditSettings && (
+                                        <input
+                                            type="file"
+                                            id="dashboard_image"
+                                            onChange={(e) => {
+                                                const file =
+                                                    e.target.files?.[0];
+                                                if (file) {
+                                                    setImagePreview(
+                                                        URL.createObjectURL(
+                                                            file,
+                                                        ),
+                                                    );
+                                                    setData("settings", {
+                                                        ...data.settings,
+                                                        dashboard_image: file,
+                                                    });
+                                                }
+                                            }}
+                                            className="block w-full rounded-lg border border-gray-600 bg-gray-800 px-3 py-2.5 text-sm text-gray-300 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+                                        />
+                                    )}
+                                    {imagePreview && (
+                                        <img
+                                            src={imagePreview}
+                                            alt="Dashboard preview"
+                                            className="mt-4 h-40 w-full rounded-lg border border-gray-600 object-contain bg-gray-900 p-2"
+                                        />
+                                    )}
+                                    {canEditSettings && (
+                                        <Button
+                                            type="submit"
+                                            disabled={processing}
+                                            className="mt-4"
+                                        >
+                                            {processing
+                                                ? "Uploading..."
+                                                : "Upload Image"}
+                                        </Button>
+                                    )}
+                                </form>
+                            </div>
                         </div>
-
-                    </div>}
+                    )}
                 </div>
             </div>
         </>
