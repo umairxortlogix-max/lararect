@@ -22,12 +22,12 @@ class DatabaseSeeder extends Seeder
         foreach ($roles as $role) {
             Role::firstOrCreate(['name' => $role, 'guard_name' => 'web']);
         }
-        // $user = User::create([
-        //     'name' => 'Super Admin',
-        //     'email' => 'superadmin@gmail.com',
-        //     'password' => bcrypt('password'),
-        // ]);
-        // $user->assignRole('super_admin');
+        $user = User::create([
+            'name' => 'Super Admin',
+            'email' => 'superadmin@gmail.com',
+            'password' => bcrypt('password'),
+        ]);
+        $user->assignRole('super_admin');
 
 
         $permissions = [

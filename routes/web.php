@@ -4,6 +4,7 @@ use App\Http\Controllers\GHLController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\SubaccountController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -96,7 +97,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 // GHL CONNECTION
-
+Route::get('/locationData', [SubaccountController::class, 'locationData'])
+    ->name('locationData')
+    ->middleware('auth');
 
 /*
 |--------------------------------------------------------------------------
