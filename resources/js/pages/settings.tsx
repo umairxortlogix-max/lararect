@@ -11,9 +11,10 @@ interface Setting {
 interface Props {
     settings: Setting[];
     isSuperAdmin: boolean;
+    isAdmin: boolean;
 }
 
-export default function SettingsPage({ settings = [], isSuperAdmin }: Props) {
+export default function SettingsPage({ settings = [], isSuperAdmin, isAdmin }: Props) {
     const can = useCan();
     const canViewSettings = can("view settings");
     const canEditSettings = can("edit settings");
@@ -23,6 +24,9 @@ export default function SettingsPage({ settings = [], isSuperAdmin }: Props) {
     const ghlSyncLabel = isSuperAdmin
         ? "Sync Locations"
         : "Sync Locations Data";
+    const ghlsynclocationlabel = isSuperAdmin
+        ? 'Sync Locations Data'
+        : 'Sync Subaccount Data';
 
     const getSettingValue = (key: string) => {
         return settings.find((setting) => setting.key === key)?.value || "";
@@ -79,22 +83,13 @@ export default function SettingsPage({ settings = [], isSuperAdmin }: Props) {
         <>
             <Head title="Settings" />
 
-            <div className="flex h-full flex-1 flex-col overflow-x-auto p-4">
+            <div className="min-h-svh flex-1 overflow-x-auto bg-[#f5f7f8] p-4">
                 <div className="mx-auto w-full max-w-3xl">
-                    {isSuperAdmin && (
+                    {isAdmin && !isSuperAdmin && (
                         <>
-                            <div className="mb-6">
-                                <h1 className="text-2xl font-bold tracking-tight text-gray-200">
-                                    GHL Credentials
-                                </h1>
-
-                                <p className="mt-1 text-sm text-gray-400">
-                                    Configure your GoHighLevel API credentials.
-                                </p>
-                            </div>
-                            <div className="rounded-xl border border-gray-600 bg-gray-800 shadow-sm">
-                                <div className="border-b border-gray-600 px-6 py-5">
-                                    <div className="mb-4 rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+                            <div className="glass-panel rounded-2xl">
+                                <div className="border-b border-[#bbf7d0] px-6 py-5">
+                                    <div className="mb-4 rounded-xl border border-[#fcd34d]/40 bg-[#fff7d6] px-4 py-3 text-sm text-[#92400e]">
                                         <strong className="font-semibold">
                                             Important:
                                         </strong>{" "}
@@ -106,14 +101,58 @@ export default function SettingsPage({ settings = [], isSuperAdmin }: Props) {
                                         your GHL app, and for live testing use a
                                         public domain, not localhost.
                                     </div>
-                                    <h2 className="text-lg font-semibold text-gray-200">
+                                    <h2 className="text-lg font-semibold text-[#1f2937]">
                                         Connection with GHL
                                     </h2>
-                                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
+                                    <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
+                                        <div>
+                                            <a
+                                                href="/locationData"
+                                                className="inline-flex items-center gap-2 rounded-xl bg-[#25d366] px-5 py-3 font-semibold text-white shadow-[0_8px_22px_rgba(37,211,102,0.22)] transition hover:bg-[#1fbf5d]"
+                                            >
+                                                <span>🔄</span>
+                                                {ghlsynclocationlabel}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </>
+                    )}
+
+                    {isSuperAdmin && (
+                        <>
+                            <div className="mb-6">
+                                <h1 className="text-2xl font-bold tracking-tight text-[#1f2937]">
+                                    GHL Credentials
+                                </h1>
+
+                                <p className="mt-1 text-sm text-[#6b7280]">
+                                    Configure your GoHighLevel API credentials.
+                                </p>
+                            </div>
+                            <div className="glass-panel rounded-2xl shadow-sm">
+                                <div className="border-b border-[#bbf7d0] px-6 py-5">
+                                    <div className="mb-4 rounded-lg border border-[#fcd34d]/50 bg-[#fff7d6] px-4 py-3 text-sm text-[#92400e]">
+                                        <strong className="font-semibold">
+                                            Important:
+                                        </strong>{" "}
+                                        GHL integration works only with the
+                                        correct agency or sub-account setup. If
+                                        you are already logged in to GHL, log
+                                        out and log in again before connecting.
+                                        Use the exact redirect URL configured in
+                                        your GHL app, and for live testing use a
+                                        public domain, not localhost.
+                                    </div>
+                                    <h2 className="text-lg font-semibold text-[#1f2937]">
+                                        Connection with GHL
+                                    </h2>
+                                    <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
                                         <div>
                                             <a
                                                 href="/ghl/connect"
-                                                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-3 font-medium text-white transition hover:bg-blue-700"
+                                                className="inline-flex items-center gap-2 rounded-lg bg-[#25d366] px-5 py-3 font-medium text-white transition hover:bg-[#1fbf5d]"
                                             >
                                                 <span>🔗</span>
                                                 {ghlConnectLabel}
@@ -122,7 +161,7 @@ export default function SettingsPage({ settings = [], isSuperAdmin }: Props) {
                                         <div>
                                             <a
                                                 href="/ghl/sync-location"
-                                                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-3 font-medium text-white transition hover:bg-blue-700"
+                                                className="inline-flex items-center gap-2 rounded-lg bg-[#25d366] px-5 py-3 font-medium text-white transition hover:bg-[#1fbf5d]"
                                             >
                                                 <span>🔄</span>
                                                 {ghlSyncLabel}
@@ -132,9 +171,9 @@ export default function SettingsPage({ settings = [], isSuperAdmin }: Props) {
                                 </div>
                             </div>
 
-                            <div className="rounded-xl border border-gray-600 bg-gray-800 mt-6 shadow-sm">
-                                <div className="border-b border-gray-600 px-6 py-5">
-                                    <h2 className="text-lg font-semibold text-gray-200">
+                            <div className="glass-panel mt-6 rounded-2xl shadow-sm">
+                                <div className="border-b border-[#bbf7d0] px-6 py-5">
+                                    <h2 className="text-lg font-semibold text-[#1f2937]">
                                         API Configuration
                                     </h2>
                                 </div>
@@ -143,11 +182,10 @@ export default function SettingsPage({ settings = [], isSuperAdmin }: Props) {
                                     onSubmit={handleSubmit}
                                     className="space-y-6 p-6"
                                 >
-                                    {/* Client ID */}
                                     <div>
                                         <label
                                             htmlFor="client_id"
-                                            className="mb-2 block text-sm font-medium text-gray-200"
+                                            className="mb-2 block text-sm font-medium text-[#1f2937]"
                                         >
                                             Client ID
                                         </label>
@@ -163,7 +201,7 @@ export default function SettingsPage({ settings = [], isSuperAdmin }: Props) {
                                                 })
                                             }
                                             placeholder="Enter client ID"
-                                            className="block w-full rounded-lg border border-gray-600 bg-gray-800 px-3 py-2.5 text-sm text-gray-300 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+                                            className="block w-full rounded-lg border border-[#bbf7d0] bg-white px-3 py-2.5 text-sm text-[#1f2937] outline-none focus:border-[#25d366] focus:ring-2 focus:ring-[#25d366]/20"
                                         />
 
                                         {errors["settings.client_id"] && (
@@ -173,11 +211,10 @@ export default function SettingsPage({ settings = [], isSuperAdmin }: Props) {
                                         )}
                                     </div>
 
-                                    {/* Client Secret */}
                                     <div>
                                         <label
                                             htmlFor="client_secret"
-                                            className="mb-2 block text-sm font-medium text-gray-200"
+                                            className="mb-2 block text-sm font-medium text-[#1f2937]"
                                         >
                                             Client Secret
                                         </label>
@@ -194,25 +231,25 @@ export default function SettingsPage({ settings = [], isSuperAdmin }: Props) {
                                                 })
                                             }
                                             placeholder="Enter client secret"
-                                            className="block w-full rounded-lg border border-gray-600 bg-gray-800 px-3 py-2.5 text-sm text-gray-300 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+                                            className="block w-full rounded-lg border border-[#bbf7d0] bg-white px-3 py-2.5 text-sm text-[#1f2937] outline-none focus:border-[#25d366] focus:ring-2 focus:ring-[#25d366]/20"
                                         />
 
                                         {errors["settings.client_secret"] && (
                                             <p className="mt-1.5 text-sm text-red-500">
                                                 {
                                                     errors[
-                                                        "settings.client_secret"
+                                                    "settings.client_secret"
                                                     ]
                                                 }
                                             </p>
                                         )}
                                     </div>
 
-                                    <div className="flex justify-end border-t border-gray-600 pt-5">
+                                    <div className="flex justify-end border-t border-[#bbf7d0] pt-5">
                                         <button
                                             type="submit"
                                             disabled={processing}
-                                            className="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+                                            className="rounded-lg bg-[#25d366] px-5 py-2.5 text-sm font-medium text-white hover:bg-[#1fbf5d] disabled:opacity-50"
                                         >
                                             {processing
                                                 ? "Saving..."
@@ -225,9 +262,9 @@ export default function SettingsPage({ settings = [], isSuperAdmin }: Props) {
                     )}
 
                     {canViewSettings && (
-                        <div className="rounded-xl border border-gray-600 bg-gray-800 shadow-sm mt-6">
-                            <div className="border-b border-gray-600 px-6 py-5">
-                                <h2 className="text-lg font-semibold text-gray-200">
+                        <div className="glass-panel mt-6 rounded-2xl shadow-sm">
+                            <div className="border-b border-[#bbf7d0] px-6 py-5">
+                                <h2 className="text-lg font-semibold text-[#1f2937]">
                                     Dashboard Image
                                 </h2>
                                 <form
@@ -236,7 +273,7 @@ export default function SettingsPage({ settings = [], isSuperAdmin }: Props) {
                                 >
                                     <label
                                         htmlFor="dashboard_image"
-                                        className="mb-2 block text-sm font-medium text-gray-200"
+                                        className="mb-2 block text-sm font-medium text-[#1f2937]"
                                     >
                                         Dashboard Image
                                     </label>
@@ -260,14 +297,14 @@ export default function SettingsPage({ settings = [], isSuperAdmin }: Props) {
                                                     });
                                                 }
                                             }}
-                                            className="block w-full rounded-lg border border-gray-600 bg-gray-800 px-3 py-2.5 text-sm text-gray-300 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+                                            className="block w-full rounded-lg border border-[#bbf7d0] bg-white px-3 py-2.5 text-sm text-[#1f2937] outline-none focus:border-[#25d366] focus:ring-2 focus:ring-[#25d366]/20"
                                         />
                                     )}
                                     {imagePreview && (
                                         <img
                                             src={imagePreview}
                                             alt="Dashboard preview"
-                                            className="mt-4 h-40 w-full rounded-lg border border-gray-600 object-contain bg-gray-900 p-2"
+                                            className="mt-4 h-40 w-full rounded-lg border border-[#bbf7d0] bg-[#f9fefb] object-contain p-2"
                                         />
                                     )}
                                     {canEditSettings && (

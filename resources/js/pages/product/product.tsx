@@ -17,8 +17,8 @@ export default function ApiTest({ products = [] }:props) {
         <>
             <Head title="API Test" />
 
-            <div className="p-6">
-                <h1 className="mb-6 text-2xl font-bold">
+            <div className="min-h-svh bg-[#f5f7f8] p-6">
+                <h1 className="mb-6 text-2xl font-bold text-[#1f2937]">
                     API Products
                 </h1>
 
@@ -26,7 +26,7 @@ export default function ApiTest({ products = [] }:props) {
                     {products.map((product) => (
                         <div
                             key={product.id}
-                            className="rounded-lg border p-4 shadow-sm"
+                            className="glass-panel rounded-2xl p-4 transition-shadow hover:shadow-[0_14px_30px_rgba(37,211,102,0.12)]"
                         >
                             <img
                                 src={product.image}
@@ -38,7 +38,7 @@ export default function ApiTest({ products = [] }:props) {
                                 {product.title}
                             </h2>
 
-                            <p className="mt-2 text-sm text-gray-600">
+                            <p className="mt-2 text-sm text-[#6b7280]">
                                 {product.description}
                             </p>
 
@@ -46,7 +46,7 @@ export default function ApiTest({ products = [] }:props) {
                                 ${product.price}
                             </p>
 
-                            <p className="mt-1 text-sm text-gray-500">
+                            <p className="mt-1 text-sm text-[#6b7280]">
                                 {product.category}
                             </p>
                         </div>

@@ -17,5 +17,12 @@ export function AppShell({ children, variant = 'sidebar' }: Props) {
         );
     }
 
-    return <SidebarProvider defaultOpen={isOpen}>{children}</SidebarProvider>;
+    return (
+        <SidebarProvider
+            defaultOpen={isOpen}
+            className="[--background:#f5f7f8] [--foreground:#1f2937] [--sidebar:#075e54] [--sidebar-foreground:#dcf8c6] [--sidebar-primary:#25d366] [--sidebar-primary-foreground:#ffffff] [--sidebar-accent:#128c7e] [--sidebar-accent-foreground:#ffffff] [--sidebar-border:rgba(220,248,198,0.18)] [--sidebar-ring:#25d366] bg-[#f5f7f8] text-[#1f2937]"
+        >
+            {children}
+        </SidebarProvider>
+    );
 }

@@ -86,7 +86,7 @@ export default function UserPage({ users = [], roles = [] }: Props) {
     return (
         <>
             <Head title="Users" />
-            <div className="p-6">
+            <div className="min-h-svh bg-[#f5f7f8] p-6">
                 <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
                     <div>
                         <h1 className="text-2xl font-bold">Subaccount </h1>
@@ -99,11 +99,11 @@ export default function UserPage({ users = [], roles = [] }: Props) {
 
                 </div>
 
-                <div className="overflow-hidden rounded-xl border bg-card shadow-sm">
+                <div className="glass-panel overflow-hidden rounded-2xl">
                     <div className="overflow-x-auto">
-                        <table className="w-full min-w-[520px] text-sm">
-                            <thead className="bg-muted/60 text-left text-muted-foreground">
-                                <tr className="border-b">
+                        <table className="glass-table min-w-[720px] text-sm">
+                            <thead className="glass-table-header text-left">
+                                <tr>
                                     <th className="px-5 py-3 font-medium">ID</th>
                                     <th className="px-5 py-3 font-medium">Name</th>
                                     <th className="px-5 py-3 font-medium">Email</th>
@@ -112,15 +112,15 @@ export default function UserPage({ users = [], roles = [] }: Props) {
                                     <th className="px-5 py-3 font-medium">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y">
+                            <tbody>
                                 {users.length > 0 ? (
                                     users.map((user) => (
-                                        <tr key={user.id} className="transition-colors hover:bg-muted/40">
-                                            <td className="px-5 py-4 font-medium">{user.id}</td>
-                                            <td className="px-5 py-4">{user.name}</td>
-                                            <td className="px-5 py-4 text-muted-foreground">{user.email}</td>
-                                            <td className="px-5 py-4">{user.location_id || 'N/A'}</td>
-                                            <td className="px-5 py-4">{user.roles.join(', ') || 'No role'}</td>
+                                        <tr key={user.id} className="glass-table-row">
+                                            <td className="px-5 py-4 font-medium text-[#1f2937]">#{user.id}</td>
+                                            <td className="px-5 py-4 font-medium text-[#1f2937]">{user.name}</td>
+                                            <td className="glass-muted px-5 py-4">{user.email}</td>
+                                            <td className="px-5 py-4 text-[#475569]">{user.location_id || 'N/A'}</td>
+                                            <td className="px-5 py-4"><span className="glass-badge">{user.roles.join(', ') || 'No role'}</span></td>
                                             <td className="px-5 py-4">
                                                 {can('edit users') && (
                                                     <Button variant="outline" size="sm" onClick={() => handleOpenEdit(user)}>
@@ -140,7 +140,7 @@ export default function UserPage({ users = [], roles = [] }: Props) {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan={6} className="px-5 py-10 text-center text-muted-foreground">
+                                        <td colSpan={6} className="glass-muted px-5 py-10 text-center">
                                             No users found.
                                         </td>
                                     </tr>

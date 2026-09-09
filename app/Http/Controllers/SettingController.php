@@ -13,8 +13,13 @@ class SettingController extends Controller
     public function index()
     {
         $settings = Setting::where('User_id', auth()->id())->get();
+        $user = auth()->user();
 
-        return inertia('settings', ['settings' => $settings, 'isSuperAdmin' => auth()->user()->hasRole('super_admin')]);
+        return inertia('settings', [
+            'settings' => $settings,
+            'isSuperAdmin' => $user->hasRole('super_admin'),
+            'isAdmin' => $user->hasAnyRole(['admin', 'super_admin']),
+        ]);
     }
 
     /**

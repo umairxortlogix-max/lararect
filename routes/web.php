@@ -8,7 +8,7 @@ use App\Http\Controllers\SubaccountController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::inertia('/', 'welcome')->name('home');
+Route::get('/', fn () => redirect()->route('login'))->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
@@ -99,7 +99,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // GHL CONNECTION
 Route::get('/locationData', [SubaccountController::class, 'locationData'])
     ->name('locationData')
-    ->middleware('auth');
+    ->middleware(['auth', 'verified', 'permission:view settings']);
 
 /*
 |--------------------------------------------------------------------------

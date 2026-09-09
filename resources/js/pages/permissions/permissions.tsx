@@ -91,22 +91,22 @@ export default function PermissionsPage({
         <>
             <Head title="Permissions" />
 
-            <div className="p-6">
+            <div className="min-h-svh bg-[#f5f7f8] p-6">
                 <div className="mx-auto w-full max-w-4xl">
                     <div className="mb-6">
-                        <h1 className="text-2xl font-bold text-gray-200">
+                        <h1 className="text-2xl font-semibold tracking-tight text-[#075e54]">
                             Roles & Permissions
                         </h1>
 
-                        <p className="mt-1 text-sm text-gray-400">
+                        <p className="mt-1 text-sm text-[#128c7e]">
                             Manage permissions for each role.
                         </p>
                     </div>
 
-                    <div className="rounded-xl border border-gray-700 bg-gray-900 p-6">
+                    <div className="glass-panel rounded-2xl p-6">
                         {/* Role Selection */}
                         <div className="mb-6">
-                            <label className="mb-2 block text-sm font-medium text-gray-300">
+                            <label className="mb-2 block text-sm font-medium text-[#1f2937]">
                                 Select Role
                             </label>
 
@@ -117,7 +117,7 @@ export default function PermissionsPage({
                                         Number(e.target.value)
                                     )
                                 }
-                                className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2.5 text-gray-200 focus:border-blue-500 focus:outline-none"
+                                className="w-full rounded-xl border border-[#bbf7d0] bg-white px-4 py-2.5 text-[#1f2937] outline-none transition focus:border-[#25d366] focus:ring-2 focus:ring-[#25d366]/10"
                             >
                                 {roles.map((role) => (
                                     <option
@@ -132,7 +132,7 @@ export default function PermissionsPage({
 
                         {/* Permissions */}
                         <div>
-                            <h2 className="mb-4 text-lg font-semibold text-gray-200">
+                            <h2 className="mb-4 text-lg font-semibold text-[#1f2937]">
                                 Permissions
                             </h2>
 
@@ -140,7 +140,7 @@ export default function PermissionsPage({
                                 {permissions.map((permission) => (
                                     <label
                                         key={permission.id}
-                                        className="flex cursor-pointer items-center gap-3 rounded-lg border border-gray-700 bg-gray-800 p-4 hover:bg-gray-750"
+                                        className="flex cursor-pointer items-center gap-3 rounded-xl border border-[#bbf7d0] bg-[#f9fefb] p-4 transition-colors hover:border-[#25d366] hover:bg-[#f0fdf4]"
                                     >
                                         <input
                                             type="checkbox"
@@ -153,10 +153,10 @@ export default function PermissionsPage({
                                                     e.target.checked
                                                 )
                                             }
-                                            className="h-4 w-4 rounded"
+                                            className="h-4 w-4 rounded border-[#25d366] text-[#25d366]"
                                         />
 
-                                        <span className="text-sm text-gray-200">
+                                        <span className="text-sm text-[#1f2937]">
                                             {permission.name}
                                         </span>
                                     </label>
@@ -170,7 +170,7 @@ export default function PermissionsPage({
                                 type="button"
                                 onClick={handleSubmit}
                                 disabled={processing || !selectedRole}
-                                className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                                className="rounded-xl bg-[#25d366] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_8px_22px_rgba(37,211,102,0.22)] transition hover:bg-[#1fbf5d] disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 {processing
                                     ? 'Saving...'
@@ -179,26 +179,26 @@ export default function PermissionsPage({
                         </div>
                     </div>
 
-                    <div className="mt-6 overflow-hidden rounded-xl border border-gray-700 bg-gray-900">
-                        <div className="border-b border-gray-700 p-6">
-                            <h2 className="text-lg font-semibold text-gray-200">
+                    <div className="glass-panel mt-6 overflow-hidden rounded-2xl">
+                        <div className="border-b border-[#bbf7d0] p-6">
+                            <h2 className="text-lg font-semibold text-[#1f2937]">
                                 User Sidebar Access
                             </h2>
-                            <p className="mt-1 text-sm text-gray-400">
+                            <p className="mt-1 text-sm text-[#6b7280]">
                                 Sidebar menus available through each user's role.
                             </p>
                         </div>
 
                         <div className="overflow-x-auto">
-                            <table className="w-full min-w-[720px] text-left text-sm">
-                                <thead className="border-b border-gray-700 bg-gray-800 text-gray-400">
+                            <table className="glass-table min-w-[720px] text-left text-sm">
+                                <thead className="glass-table-header">
                                     <tr>
                                         <th className="px-6 py-3 font-medium">User</th>
                                         <th className="px-6 py-3 font-medium">Role</th>
                                         <th className="px-6 py-3 font-medium">Visible Menus</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-700">
+                                <tbody>
                                     {users.map((user) => {
                                         const menus = [
                                             ['Dashboard', 'view dashboard'],
@@ -209,16 +209,24 @@ export default function PermissionsPage({
                                         ].filter(([, permission]) => user.permissions.includes(permission));
 
                                         return (
-                                            <tr key={user.id}>
+                                            <tr key={user.id} className="glass-table-row">
                                                 <td className="px-6 py-4">
-                                                    <div className="font-medium text-gray-200">{user.name}</div>
-                                                    <div className="text-gray-400">{user.email}</div>
+                                                    <div className="font-medium text-[#1f2937]">{user.name}</div>
+                                                    <div className="glass-muted">{user.email}</div>
                                                 </td>
-                                                <td className="px-6 py-4 text-gray-300">
-                                                    {user.roles.join(', ') || 'No role'}
+                                                <td className="px-6 py-4 text-[#475569]">
+                                                    <span className="glass-badge">
+                                                        {user.roles.join(', ') || 'No role'}
+                                                    </span>
                                                 </td>
-                                                <td className="px-6 py-4 text-gray-300">
-                                                    {menus.map(([menu]) => menu).join(', ') || 'No menu access'}
+                                                <td className="px-6 py-4 text-[#475569]">
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {menus.length > 0 ? menus.map(([menu]) => (
+                                                            <span key={menu} className="rounded-full border border-[#bbf7d0] bg-[#f0fdf4] px-2.5 py-1 text-xs text-[#128c7e]">
+                                                                {menu}
+                                                            </span>
+                                                        )) : <span className="glass-muted">No menu access</span>}
+                                                    </div>
                                                 </td>
                                             </tr>
                                         );

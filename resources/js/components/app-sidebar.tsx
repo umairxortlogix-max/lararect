@@ -1,5 +1,12 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-react';
+import {
+    FolderGit2,
+    LayoutDashboard,
+    Package,
+    Settings2,
+    ShieldCheck,
+    Users,
+} from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -20,34 +27,33 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
         href: dashboard(),
-        icon: LayoutGrid,
-        permissions:'view dashboard',
-    
+        icon: LayoutDashboard,
+        permissions: 'view dashboard',
     },
     {
         title: 'Products',
         href: products(),
-        icon: LayoutGrid,
-        permissions:'view products'
+        icon: Package,
+        permissions: 'view products',
     },
     {
         title: 'Users',
         href: users(),
-        icon: LayoutGrid,
+        icon: Users,
         permissions: 'view users'
     },
      {
         title: 'Permissions',
         href: '/permissions',
-        icon: LayoutGrid,
+        icon: ShieldCheck,
         permissions: 'view permissions',
         superAdminOnly: true,
     },
     {
         title: 'Settings',
         href: '/settings/info',
-        icon: LayoutGrid,
-        permissions:'view settings'
+        icon: Settings2,
+        permissions: 'view settings',
     }
 ];
 
@@ -66,7 +72,11 @@ const footerNavItems: NavItem[] = [
 
 export function AppSidebar() {
     return (
-        <Sidebar collapsible="icon" variant="inset">
+        <Sidebar
+            collapsible="icon"
+            variant="inset"
+            className="border-[#075e54] bg-[#075e54] text-[#dcf8c6] shadow-[10px_0_35px_rgba(7,94,84,0.16)] [&_[data-sidebar=sidebar]]:border-[#075e54] [&_[data-sidebar=sidebar]]:bg-[#075e54] [&_[data-sidebar=sidebar]]:text-[#dcf8c6]"
+        >
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
