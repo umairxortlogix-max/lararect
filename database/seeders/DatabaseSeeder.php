@@ -22,18 +22,20 @@ class DatabaseSeeder extends Seeder
         foreach ($roles as $role) {
             Role::firstOrCreate(['name' => $role, 'guard_name' => 'web']);
         }
-        $user = User::create([
-            'name' => 'Super Admin',
-            'email' => 'superadmin@gmail.com',
-            'password' => bcrypt('password'),
-        ]);
+        $user = User::firstOrCreate(
+            ['email' => 'superadmin@gmail.com'],
+            [
+                'name' => 'Super Admin',
+                'password' => bcrypt('password'),
+            ]
+        );
         $user->assignRole('super_admin');
 
 
         $permissions = [
             'view dashboard',
             'view permissions',
-
+            'view contact',
             'view products',
             'create products',
             'edit products',
@@ -48,7 +50,7 @@ class DatabaseSeeder extends Seeder
             'edit settings',
         ];
         foreach ($permissions as $permission) {
-           Permission::firstOrCreate([
+            Permission::firstOrCreate([
                 'name' => $permission,
                 'guard_name' => 'web',
             ]);
@@ -82,6 +84,6 @@ class DatabaseSeeder extends Seeder
             );
         }
 
-        User::query()->each(fn (User $user) => $user->syncPermissions([]));
+        User::query()->each(fn(User $user) => $user->syncPermissions([]));
     }
 }

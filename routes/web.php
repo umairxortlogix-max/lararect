@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\GHLController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
@@ -8,7 +9,7 @@ use App\Http\Controllers\SubaccountController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => redirect()->route('login'))->name('home');
+Route::get('/', fn() => redirect()->route('login'))->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
@@ -83,7 +84,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('permissions.update');
 
     Route::get('/ghl/connect', [GHLController::class, 'connect'])
-        ->middleware('permission:view settings')
+        ->middleware('permission:view Contact')
         ->name('ghl.connect');
 
     Route::get('/test/callback', [GHLController::class, 'callback'])
@@ -100,7 +101,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/locationData', [SubaccountController::class, 'locationData'])
     ->name('locationData')
     ->middleware(['auth', 'verified', 'permission:view settings']);
-
+Route::get('contact', [ContactController::class, 'index'])->middleware('permission:view contact')->name('GhlContact');
 /*
 |--------------------------------------------------------------------------
 | API Test

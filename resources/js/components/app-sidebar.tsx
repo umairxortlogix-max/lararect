@@ -37,12 +37,18 @@ const mainNavItems: NavItem[] = [
         permissions: 'view products',
     },
     {
+        title: 'Contact',
+        href: '/contact',
+        icon: Users,
+        permissions: 'view contact'
+    },
+    {
         title: 'Users',
         href: users(),
         icon: Users,
         permissions: 'view users'
     },
-     {
+    {
         title: 'Permissions',
         href: '/permissions',
         icon: ShieldCheck,
